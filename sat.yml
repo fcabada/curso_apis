@@ -1,0 +1,101 @@
+swagger: "2.0"
+info:
+  version: 1.0.0
+  title: "SAT"
+  description: Obtención de Patentes y pedimentos, segun RFC y aduana por día
+  termsOfService: http://swagger.io/terms/
+  contact:
+    name: Swagger API Team
+    email: foo@example.com
+    url: http://madskristensen.net
+  license:
+    name: MIT
+    url: http://github.com/gruntjs/grunt/blob/master/LICENSE-MIT
+host: google.com
+basePath: /api
+schemes:
+  - https
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /obtenerPedimentos:
+    get:
+      description: |
+        Obtener los pedimentos de un día segun su RFC y la aduana.
+      operationId: getPedimentos
+      parameters:
+        - name: RFC
+          in: query
+          description: clave alfanumerica que representa a un individuo
+          required: true
+          type: string
+        - name: clave
+          in: query
+          description: contraseña del RFC
+          required: true
+          type: string
+        - name: aduana
+          in: query
+          description: Clave de la aduana por la cual se buscaran los pedimentos ingresados
+          required: true
+          type: string
+      responses:
+        200:
+          description: Pedimentos encontrados
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/pedimentos'
+        503:
+          description: Servicio Inaccesible
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Error'
+        511:
+          description: Usuario o clave Incorrecta
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Error'
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+definitions:
+  pedimentos:
+    allOf:
+      - $ref: '#/definitions/NewPedimento'
+      - required:
+        - id
+        properties:
+          id:
+            type: integer
+            format: int64
+  NewPedimento:
+    required:
+      - aduana
+      - num_pedimento
+      - num_patente
+      - RFC
+    properties:
+      aduana:
+        type: string
+      num_pedimento:
+        type: string
+      num_patente:
+        type: string
+      RFC:
+        type: string
+  Error:
+    required:
+      - code
+      - message
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
