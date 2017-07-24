@@ -1,0 +1,60 @@
+swagger: "2.0"
+info:
+  version: 1.0.0
+  title: "Carpeta"
+  description: API para el control de permisos y usuarios en carpetas utilizando PATH Materializado con swagger-2.0 specification
+  termsOfService: http://swagger.io/terms/
+  contact:
+    name: Fatima y Robert Navia
+    email: mail@example.com
+    url: http://nourl.io
+  license:
+    name: MIT
+    url: http://github.com/gruntjs/grunt/blob/master/LICENSE-MIT
+host: 80.211.226.22
+basePath: /api
+schemes:
+  - http
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /carpetas:
+    post:
+      description: |
+        Crear un arbol de directorio para el manejo de archivos
+      operationId: crearCarpeta
+      parameters:
+        - name: id
+          in: query
+          description: id del Programación Anual de revisión
+          required: true
+          type: integer
+          format: int32
+        - name: usuario
+          in: query
+          description: usuario que requiere acceder a la carpeta
+          required: true
+          type: integer
+          format: int32
+      responses:
+        202:
+          description: Arbol de Carpeta Creado
+          schema:
+            type: string
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+definitions:
+  Error:
+    required:
+      - id
+      - usuario
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
