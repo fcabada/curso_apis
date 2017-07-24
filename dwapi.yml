@@ -1,0 +1,66 @@
+swagger: "2.0"
+info:
+  version: 1.0.0
+  title: "DWAPI"
+  description: API para alimentar la base de datos que sera utilizada por el pentaho por medio de las base de datos de los microservicios relacionados al sistema con un ETL que sera ejecutado por medio de un shell script.
+  termsOfService: http://swagger.io/terms/
+  contact:
+    name: Softlogik
+    email: softlogik@softlogik.mx
+    url: http://www.softlogik.mx/en/
+host: 80.211.227.207
+basePath: /apidw
+schemes:
+  - http
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /alimentar:
+    post:
+      description: Funcion que implementa un ETL el cual obtiene datos de las bases de datos de los microservicios y los centraliza en la base de datos del DW.
+      operationId: alimentaDW
+      parameters:
+        - name: fecha
+          in: query
+          description: Fecha de la que se van a obtener todas las operaciones.
+          required: true
+          type: string
+          format: date
+
+      responses:
+        202:
+          description: Operacio Exitosa
+          schema:
+            $ref: '#/definitions/Ok'
+        500:
+          description: No se pudo conectar con la base de datos
+          schema:
+            $ref: '#/definitions/Error'
+        default:
+          description: unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+definitions:
+
+  Error:
+    required:
+      - code
+      - message
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
+  Ok:
+    required:
+      - code
+      - message
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
